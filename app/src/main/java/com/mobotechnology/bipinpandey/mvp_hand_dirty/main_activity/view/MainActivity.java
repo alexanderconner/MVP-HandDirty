@@ -19,24 +19,15 @@ import android.widget.TextView;
 
 import com.mobotechnology.bipinpandey.mvp_hand_dirty.R;
 import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.model.User;
-import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.model.UserService;
-import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.model.UserServiceImpl;
+
 import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.presenter.UserPresenter;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements UserScreenView {
 
     private EditText userNameText;
     private EditText emailText;
     private UserPresenter presenter;
-    private UserServiceImpl serviceImpl;
-    private UserService apiService;
-    private TextView myTextView;
+
     private ProgressBar progressBar;
     private Button loginButton;
 
@@ -47,52 +38,16 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //myTextView = findViewById(R.id.myTextView);
         userNameText = findViewById(R.id.username);
         emailText = findViewById(R.id.email);
-        Button loginButton = findViewById(R.id.loginButton);
+        loginButton = findViewById(R.id.loginButton);
         initProgressBar();
 
-        serviceImpl = new UserServiceImpl();
 
-        apiService = serviceImpl.getRetrofit()
-                .create(UserService.class);
 
         loginButton.setOnClickListener(loginHandler);
 
-
-        userNameText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //presenter.updateFullName(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                finishShowLoading();
-            }
-        });
-
-        emailText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //presenter.updateEmail(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                finishShowLoading();
-            }
-        });
-
+        presenter = new UserPresenter(this);
     }
 
     View.OnClickListener loginHandler = new View.OnClickListener() {
@@ -102,40 +57,12 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
         }
     };
 
-    //TODO add to presenter
+    //Offloads Login logic to presenter
     private void getUserInfo(String username) {
-        Call<List<User>> call = apiService.getByUserName(username);
-        showLoading();
-        call.enqueue(new Callback<List<User>>() {
-
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                finishShowLoading();
-                int statusCode = response.code();
-                Log.i("onResponse", "Status Code: " + statusCode);
-                List<User> users = response.body();
-                if (users != null && users.size() > 0) {
-
-                    Log.i("onResponse", "Response Body: " + users.toString());
-                    Log.i("onResponse", "Response name:  " + users.get(0).getName());
-                    Log.i("onResponse", "Response username:  " + users.get(0).getUsername());
-                } else {
-                    showError("User Not Found");
-                    Log.i("onResponse", "Response Body was NULL");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                // Log error here since request failed
-                finishShowLoading();
-                showError(t.getMessage());
-            }
-
-        });
+        presenter.loadAccount(username);
     }
 
-    //This is specific to this activity so will not move
+    //Setup for this Activity
     private void initProgressBar() {
         progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleSmall);
         progressBar.setIndeterminate(true);
@@ -147,12 +74,6 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
     }
 
     @Override
-    public void updateUserInfoTextView(String info) {
-        myTextView.setText(info);
-    }
-
-
-    @Override
     public void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -162,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    //TODO Kickoff new activity/fragment for logged in screen
     @Override
     public void showContent() {
 
