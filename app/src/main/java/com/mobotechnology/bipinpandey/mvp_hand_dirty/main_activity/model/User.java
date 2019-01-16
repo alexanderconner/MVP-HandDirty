@@ -1,27 +1,56 @@
 package com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by bpn on 11/30/17.
  */
 
 public class User {
 
-    private String fullName = "", email = "";
+    @SerializedName("id")
+    @Expose
+    private int id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("username")
+    @Expose
+    private String username;
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("address")
+    @Expose
+    private Address address;
+    @SerializedName("phone")
+    @Expose
+    private String phone;
 
-    public User() {
+
+    public int getId() {
+        return id;
     }
 
-    public User(String fullName, String email) {
-        this.fullName = fullName;
-        this.email = email;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -32,8 +61,19 @@ public class User {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Email : " + email + "\nFullName : " + fullName;
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
