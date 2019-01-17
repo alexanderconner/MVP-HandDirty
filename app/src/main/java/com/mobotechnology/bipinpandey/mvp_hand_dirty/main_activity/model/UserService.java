@@ -21,6 +21,9 @@ public interface UserService {
     @GET("users")
     Call<List<User>> getByUserName(@Query("username") String username);
 
+    @GET("users")
+    Call<List<User>> getByEmail(@Query("email") String username);
+
     @POST("users/new")
     Call<User> createUser(@Body User user);
 

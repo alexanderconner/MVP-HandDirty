@@ -36,10 +36,10 @@ public class UserPresenter {
     }
 
 
-    public void loadAccount(String username) {
+    public void loadAccount(String email) {
         view.showLoading();
 
-        Call<List<User>> call = apiService.getByUserName(username);
+        Call<List<User>> call = apiService.getByEmail(email);
         call.enqueue(new Callback<List<User>>() {
 
             @Override

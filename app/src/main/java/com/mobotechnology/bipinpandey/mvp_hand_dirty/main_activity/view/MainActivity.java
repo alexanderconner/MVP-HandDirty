@@ -1,21 +1,16 @@
 package com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.view;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.mobotechnology.bipinpandey.mvp_hand_dirty.R;
 import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.model.User;
@@ -24,12 +19,16 @@ import com.mobotechnology.bipinpandey.mvp_hand_dirty.main_activity.presenter.Use
 
 public class MainActivity extends AppCompatActivity implements UserScreenView {
 
-    private EditText userNameText;
-    private EditText emailText;
+
     private UserPresenter presenter;
 
-    private ProgressBar progressBar;
     private Button loginButton;
+
+    private EditText emailText;
+    private EditText passwordText;
+
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        userNameText = findViewById(R.id.username);
-        emailText = findViewById(R.id.email);
+        emailText = findViewById(R.id.emailEditText);
+        passwordText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         initProgressBar();
 
@@ -53,13 +52,13 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
     View.OnClickListener loginHandler = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            getUserInfo(userNameText.getText().toString());
+            getUserInfo(emailText.getText().toString());
         }
     };
 
     //Offloads Login logic to presenter
-    private void getUserInfo(String username) {
-        presenter.loadAccount(username);
+    private void getUserInfo(String email) {
+        presenter.loadAccount(email);
     }
 
     //Setup for this Activity
@@ -102,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements UserScreenView {
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        passwordText.getText().clear();
     }
 
     @Override
